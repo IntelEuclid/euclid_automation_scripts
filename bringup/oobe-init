@@ -1,0 +1,194 @@
+#!/usr/bin/tclsh
+
+
+proc runOOBEScripts {} {
+    puts "-I- running OOBE scripts"
+    set services [lsort [glob -directory /intel/euclid/oobe-services/ros_services/ S*/init.sh]]
+    set i 0
+    foreach service $services {
+       puts "-I- running service: $service"
+      if { [catch {exec $service &} err ] } {
+          puts "Error running: $service, error: $err"
+      }
+      if {$i ==0} {
+        incr i
+        exec sleep 5
+      }
+       
+       exec sleep 1
+    }
+    puts "-I- Done running OOBE scripts"
+
+}
+
+proc stopOOBEScripts {} {
+    if { [catch {exec /intel/euclid/oobe-services/ros_services/stop_ros.bash} err ] } {
+        puts "Error: $err"
+    } else {
+        puts "no error"
+    }
+}
+
+proc runStartupScripts { {fast false} } {
+    puts "-I- Running startup scripts"
+    set services [lsort [glob -directory /intel/euclid/oobe-services/startup_services/ S*/init.sh]]
+    set i 0
+    foreach service $services {
+      puts "-I- running service: $service"
+
+      if {[regexp {Network} $service] } {
+          if { [catch {exec $service $fast } err ] } {
+              puts "Error running: $service, error: $err"
+          }
+      } else {
+        if { [catch {exec $service & } err ] } {
+              puts "Error running: $service, error: $err"
+          }
+      }
+      incr i 
+       exec sleep 1
+    }
+    puts "-I- Done running startup scripts"
+}
+
+proc runSafeMode {  } {
+    puts "-I- Running scripts in safe mode"
+        if { [catch {exec /intel/euclid/oobe-services/startup_services/S2WebServer/stop.sh &} err ] } {
+        puts "Error: $err"
+    } else {
+        puts "no error"
+    }
+    
+    if { [catch {exec /intel/euclid/oobe-services/startup_services/S2WebServer/init.sh True &} err ] } {
+        puts "Error: $err"
+    } else {
+        puts "no error"
+    }
+    puts "-I- Done running scripts in safe mode "
+}
+
+proc exitSafeMode {  } {
+    puts "-I- Exiting scripts in safe mode"
+    if { [catch {exec /intel/euclid/oobe-services/startup_services/S2WebServer/stop.sh &} err ] } {
+        puts "Error: $err"
+    } else {
+        puts "no error"
+    }
+
+    if { [catch {exec /intel/euclid/oobe-services/startup_services/S2WebServer/init.sh &} err ] } {
+        puts "Error: $err"
+    } else {
+        puts "no error"
+    }
+    puts "-I- Done Exiting scripts in safe mode "
+}
+
+proc runMonitorScripts { {fast false} } {
+    puts "-I- Running Mon scripts"
+    set services [lsort [glob -directory /intel/euclid/oobe-services/monitor_services/ S*/init.sh]]
+    set i 0
+    foreach service $services {
+      puts "-I- running service: $service"
+
+     if { [catch {exec $service & } err ] } {
+              puts "Error running: $service, error: $err"
+          }
+      
+      incr i 
+       exec sleep 1
+    }
+    puts "-I- Done running monitor scripts"
+}
+
+proc stopMonitorScripts {} {
+   
+   set services [lsort [glob -directory /intel/euclid/oobe-services/monitor_services/ S*/stop.sh]]
+    set i 0
+    foreach service $services {
+      puts "Stopping service: $service"
+      if { [catch {exec $service } err ] } {
+          puts "Error stopping: $service, error: $err"
+      }
+       
+       #exec sleep 1
+    }
+    
+    puts "Done stopping service"
+}
+
+proc stopStartupScripts {} {
+   
+   set services [lsort [glob -directory /intel/euclid/oobe-services/startup_services/ S*/stop.sh]]
+    set i 0
+    foreach service $services {
+      puts "Stopping service: $service"
+      if { [catch {exec $service } err ] } {
+          puts "Error stopping: $service, error: $err"
+      }
+       
+       #exec sleep 1
+    }
+    if { [catch {exec /intel/euclid/oobe-services/startup_services/stop_scripts.bash } err ] } {
+      puts "Error stopping: $err"
+    }
+    puts "Done stopping service"
+
+
+}
+
+if { [string equal [lindex $argv 0] "restart-oobe" ] } {
+   puts "Stopping .."
+   stopOOBEScripts
+   puts "Stoping startup"
+   stopStartupScripts
+   puts "Stoping monitor"
+   stopMonitorScripts
+   puts "Running startup"
+   runStartupScripts true
+   puts "Running monitor scripts"
+   runMonitorScripts
+   puts "Running oobe"
+   runOOBEScripts
+} elseif { [string equal [lindex $argv 0] "restart-live-net" ] } {
+   puts "** calling restart-live-net **"
+   puts "Stopping oobe scripts"
+   stopOOBEScripts
+   puts "Stoping startup"
+   stopStartupScripts
+   puts "Running startup"
+   runStartupScripts false 
+   puts "Running oobe"
+   runOOBEScripts
+} elseif { [string equal [lindex $argv 0] "stop-oobe-live-net" ] } {
+   puts "** calling stop-oobe-with-live-net **"
+   stopOOBEScripts
+   puts "Stoping startup"
+   stopStartupScripts
+} elseif { [string equal [lindex $argv 0] "start-oobe-live-net" ] } {
+   runStartupScripts
+   runOOBEScripts
+} elseif { [string equal [lindex $argv 0] "start-safe-mode" ] } {
+   runSafeMode
+} elseif { [string equal [lindex $argv 0] "exit-safe-mode" ] } {
+   exitSafeMode
+} elseif { [string equal [lindex $argv 0] "stop" ] } {
+    puts "Stopping"
+   stopOOBEScripts
+   stopStartupScripts
+   stopMonitorScripts
+} elseif { [string equal [lindex $argv 0] "start" ] } {
+   runStartupScripts
+   runMonitorScripts
+   runOOBEScripts
+} elseif { [string equal [lindex $argv 0] "stop-oobe" ] } {
+   stopOOBEScripts
+   stopStartupScripts  
+   stopMonitorScripts
+
+} else {
+   runStartupScripts
+   runMonitorScripts
+   runOOBEScripts
+}
+
+exit 0
