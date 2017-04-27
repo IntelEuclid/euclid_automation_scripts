@@ -35,7 +35,8 @@ personal information I submit with it, including my sign-off) is
 maintained indefinitely and may be redistributed consistent with
 this project or the open source license(s) involved.
 
-##Configuration:
+#Configuration:
+
 | Version        | Best Known (kinetic) |
 |:-------------- |:---------------------|
 | OS             | Ubuntu 16.04 LTS     |
