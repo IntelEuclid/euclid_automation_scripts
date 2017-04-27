@@ -8,8 +8,8 @@ http://wiki.ros.org/EuclidWiki_XXX
 
 # Contributing to the Project
 
-The Intel&reg; RealSense&trade; Euclid Automation Scripts is developed and distributed under
-a BSD- license as noted in [licenses/License.txt](licenses/License.txt).
+The Intel&reg; Euclid&trade; Automation Scripts is developed and distributed under
+a BSD-3 license as noted in [licenses/License.txt](licenses/License.txt).
 
 By making a contribution to this project, I certify that:
 
