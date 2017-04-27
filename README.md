@@ -37,7 +37,8 @@ this project or the open source license(s) involved.
 
 #Configuration:
 
-| Version        | Best Known (kinetic) |
+| Version        | Best Known           |
 |:-------------- |:---------------------|
 | OS             | Ubuntu 16.04 LTS     |
+| ROS            | Kinetic              |
 
