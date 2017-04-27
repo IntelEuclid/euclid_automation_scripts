@@ -1,10 +1,10 @@
-# Intel&reg; RealSense&trade; Eucllid Automation Scripts
-Automation and Configuration scripts for use with Intel&reg RealSense&trade Euclid Development kit.
-System install components for automation services, as well as its scenario based configuration components.
+# Intel&reg; Euclid&trade; Automation Scripts
+Automation and Configuration scripts for use with Intel&reg Euclid&trade Development kit.
+System install components for automation services, as well as out of the box scenario based configuration components.
 
-http://www.intel.com/realsense
+http://www.intel.com/Euclid_XXX
 
-http://wiki.ros.org/RealSense
+http://wiki.ros.org/EuclidWiki_XXX
 
 # Contributing to the Project
 
