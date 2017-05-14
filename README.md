@@ -2,9 +2,9 @@
 Automation and Configuration scripts for use with Intel&reg; Euclid&trade; Development kit.
 System install components for automation services, as well as out of the box scenario based configuration components.
 
-http://www.intel.com/Euclid_XXX
+[Intel® Euclid™ Community Site](http://www.euclidcommunity.intel.com).
 
-http://wiki.ros.org/EuclidWiki_XXX
+[Intel® Euclid™ Support Forum](http://www.intel.com/content/www/us/en/support/emerging-technologies/intel-euclid-development-kit.html).
 
 # Contributing to the Project
 
